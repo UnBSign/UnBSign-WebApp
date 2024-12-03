@@ -1,0 +1,150 @@
+body {
+    background-color: #f4f4f4;
+    color: #333;
+    font-family: Verdana, sans-serif;
+}
+header {
+    background-color: #C4D2EB;
+    padding-bottom: 0px;
+    font-size: 20px;
+}
+
+header h1{
+    color:white;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #ffffff;
+}
+
+a {
+    color: #003390;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#container {
+    width: 984px;
+    margin: 0 auto;
+    background: #FFF;
+    text-align: left;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: 2px solid #ccc;
+    height: 100vh;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+#cabecalho {
+    font-size: 0.9em;
+    background: #404E82;
+    border-bottom: 3px solid #D99C44;   
+    padding-left: 5px;
+}
+
+#modulos {
+    background-color: #EFEBDE;
+    color: black;
+    margin-top: 50px;
+    margin-bottom: 0px;
+    padding: 5px;
+    display: flex;
+    justify-content: flex-start;
+}
+.modulo-item::before {
+    content: "• ";
+}
+.modulo-item{
+    margin-right: 10px;
+}
+
+#rodape {
+    position: relative;
+    bottom: 0px;
+    border-top: 3px solid #D99C44;
+    background: #404E82;
+    font-size: 0.9em;
+    margin-top: 0;
+}
+
+#pagina {
+    background-color: #EFF3FA;
+    color: #003390;
+    padding: 4px;
+    padding-left: 20px;
+}
+
+.form-container {
+    background-color: #f4f4f4; 
+    border: 1px solid #ccc; 
+    width: 960px;
+    margin: 20px auto;
+}
+.form-header {
+    background-color: #465487; 
+    font-size: 15px;
+    color: white;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+    text-transform: uppercase;
+    padding: 5px;
+}
+
+.input-group {
+    margin-bottom: 10px;
+    padding: 10px;
+}
+.file-input {
+    cursor: pointer;
+}
+.form-button{
+    background-color: #C8D5EC;
+    text-align: center;
+    padding: 3px;
+}
+
+.pdf-container {
+    position: relative;
+    width: 80%; /* 80% da largura da página */
+    height: 60vh; /* 80% da altura da tela, ajustável */
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    overflow: auto; /* Permite rolar se o PDF for maior que o contêiner */
+    background-color: #525659;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 5px 50px 5px 50px;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    height: auto;
+}
+
+/* Estilo para o carimbo */
+.stamp {
+    position: absolute;
+    width: 240px; /* Largura convertida de 180 pontos */
+    height: 66.65px; /* Altura convertida de 50 pontos */
+    background-color: rgba(255, 0, 0, 0.3);
+    color: #ff0000;
+    border: 2px dashed #ff0000;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: move;
+    z-index: 10; /* Garante que o carimbo fique sobre o PDF */
+}
+#signButton{
+    font-size:20px;
+}
+
+#signButton:hover{
+    cursor: pointer;
+}
