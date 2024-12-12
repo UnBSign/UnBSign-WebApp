@@ -128,8 +128,8 @@ canvas {
 /* Estilo para o carimbo */
 .stamp {
     position: absolute;
-    width: 240px; /* Largura convertida de 180 pontos */
-    height: 66.65px; /* Altura convertida de 50 pontos */
+    width: 150px; /* Largura convertida de 180 pontos */
+    height: 41.66px; /* Altura convertida de 50 pontos */
     background-color: rgba(255, 0, 0, 0.3);
     color: #ff0000;
     border: 2px dashed #ff0000;
@@ -139,7 +139,7 @@ canvas {
     justify-content: center;
     align-items: center;
     cursor: move;
-    z-index: 10; /* Garante que o carimbo fique sobre o PDF */
+    z-index: 10;
 }
 #signButton{
     font-size:20px;

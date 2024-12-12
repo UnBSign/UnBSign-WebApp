@@ -14,13 +14,14 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Arquivo carregado com sucesso!');
+                //alert('Arquivo carregado com sucesso!');
                 document.getElementById('pdfContainer').style.display = 'block';
                 
                 const reader = new FileReader();
                 reader.onloadend = function () {
                     const base64PDF = reader.result.split(',')[1];
                     sessionStorage.setItem('pdfFile', base64PDF);
+                    sessionStorage.setItem('pdfName', file.name);
                     loadPDF(base64PDF); 
                     centerStamp();
                 };
@@ -35,53 +36,59 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
 
 document.getElementById('signButton').addEventListener('click', function() {
     const base64PDF = sessionStorage.getItem('pdfFile');
+    const pdfName = sessionStorage.getItem("pdfName");
     const pos = getStampPosition();
     const pageNumber = 1;
 
     if (base64PDF && pos) {
         const pdfBlob = base64ToBlob(base64PDF);
+        
 
         const formData = new FormData();
-        formData.append('file', pdfBlob, 'document.pdf');
+        formData.append('file', pdfBlob, pdfName);
         formData.append('posX', pos.x);
         formData.append('posY', pos.y);
         formData.append('pageNumber', pageNumber);
 
+        
         fetch('http://localhost:8080/api/pdf/sign', {
             method: 'POST',
             body: formData,
         })
-        .then(response => response.json())
-        .then(data => {
-            const pdfBase64 = data.pdf;
-        
-            // Cria um link para download ou exibe o PDF
-            const byteCharacters = atob(pdfBase64);  // Decodifica a base64
-            const byteArrays = [];
-        
-            for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-                const slice = byteCharacters.slice(offset, offset + 1024);
-                const byteNumbers = new Array(slice.length);
-                for (let i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-                byteArrays.push(new Uint8Array(byteNumbers));
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao assinar o arquivo');
             }
-        
-            const blob = new Blob(byteArrays, { type: 'application/pdf' });
-            const blobUrl = URL.createObjectURL(blob);
-        
-            // Abre o PDF em uma nova aba
-            window.open(blobUrl);
-            console.log(blobUrl);
+            console.log(response.headers)
+            
+            const signedFileName = setSignedFileName(pdfName);
+            console.log(signedFileName);
+            
+            
+
+            // Criar o Blob do PDF assinado
+            return response.blob().then(blob => {
+                const url = URL.createObjectURL(blob);
+                const win = window.open(url, '_blank'); 
+                win.document.title = signedFileName
+                win.onload = () => {
+                  URL.revokeObjectURL(url);
+                };
+              });
         })
         .catch(error => {
-            console.error('Erro ao enviar o PDF:', error);
+            console.error(error);
+            alert('Erro ao assinar o arquivo');
         });
-    } else {
-        alert('Arquivo PDF ou posição do carimbo não encontrados!');
     }
-}) 
+});
+
+function setSignedFileName(fileName){
+    const parts = fileName.split('.');
+    const extension = parts[parts.length - 1];
+    const name = fileName.replace(/\.[^/.]+$/, '')
+    return  name.concat("_assinado.", extension)
+}
 
 // Função para converter base64 para Blob
 function base64ToBlob(base64) {
@@ -97,7 +104,7 @@ function loadPDF(base64PDF) {
     const canvas = document.getElementById('pdfCanvas');
     const context = canvas.getContext('2d');
     
-    const pdfData = atob(base64PDF);  // Decodifica a base64 para bytes
+    const pdfData = atob(base64PDF);
     const loadingTask = pdfjsLib.getDocument({data: new Uint8Array(pdfData.length).map((_, i) => pdfData.charCodeAt(i))});
 
     loadingTask.promise.then(function(pdfDoc) {
@@ -135,7 +142,7 @@ document.addEventListener("mousemove", (e) => {
 });
 
 document.addEventListener("mouseup", () => {
-    console.log(getStampPosition())
+    // console.log(getStampPosition())
     isDragging = false;
 });
 
