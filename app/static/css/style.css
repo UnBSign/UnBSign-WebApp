@@ -17,7 +17,7 @@ footer {
     margin-top: 20px;
     text-align: center;
     font-size: 0.8em;
-    color: #ffffff;
+    color: #020000;
 }
 
 a {
@@ -33,7 +33,7 @@ a {
     text-align: left;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     border: 2px solid #ccc;
-    height: 100vh;
+    height: 100%;
     padding-left: 8px;
     padding-right: 8px;
 }
@@ -116,6 +116,34 @@ a {
     background-color: #525659;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 5px 50px 5px 50px;
+    display: none;
+}
+
+.pdf-navigation {
+    /* display: flex; */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 15%;
+    display: none;
+}
+
+.pdf-nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 20%;
+    margin-bottom: 10px;
+}
+
+#pageNumberDisplay {
+    font-size: 1.2em;
+    color: #333;
+    text-align: center; 
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    width: 50px;
 }
 
 canvas {
@@ -128,8 +156,8 @@ canvas {
 /* Estilo para o carimbo */
 .stamp {
     position: absolute;
-    width: 150px; /* Largura convertida de 180 pontos */
-    height: 41.66px; /* Altura convertida de 50 pontos */
+    width: 240px; /* Largura convertida de 180 pontos */
+    height: 50px; /* Altura convertida de 50 pontos */
     background-color: rgba(255, 0, 0, 0.3);
     color: #ff0000;
     border: 2px dashed #ff0000;

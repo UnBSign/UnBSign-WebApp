@@ -43,11 +43,21 @@
             </form>
         </div>
         
-        <div class="pdf-container" id="pdfContainer" style="display: none;">
+        <div class="pdf-container" id="pdfContainer">
+            
             <canvas id="pdfCanvas" onContextMenu="return false;"></canvas>
             <div class="stamp" id="stamp">CARIMBO</div>
+            
+        </div>
+        <div class="pdf-navigation" id="pdfNavigation">
+            <div class="pdf-nav-buttons">
+                <button id="prevButton">Anterior</button>
+                <span id="pageNumberDisplay">0</span>
+                <button id="nextButton">Próximo</button>
+            </div>
             <button id="signButton">ASSINAR</button>
         </div>
+        
 
         <footer>
             SIGAA | Secretaria de Tecnologia da Informação - STI - (61) 3107-0102

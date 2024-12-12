@@ -16,6 +16,7 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
             if (data.success) {
                 //alert('Arquivo carregado com sucesso!');
                 document.getElementById('pdfContainer').style.display = 'block';
+                document.getElementById('pdfNavigation').style.display = 'flex';
                 
                 const reader = new FileReader();
                 reader.onloadend = function () {
@@ -38,7 +39,6 @@ document.getElementById('signButton').addEventListener('click', function() {
     const base64PDF = sessionStorage.getItem('pdfFile');
     const pdfName = sessionStorage.getItem("pdfName");
     const pos = getStampPosition();
-    const pageNumber = 1;
 
     if (base64PDF && pos) {
         const pdfBlob = base64ToBlob(base64PDF);
@@ -48,8 +48,8 @@ document.getElementById('signButton').addEventListener('click', function() {
         formData.append('file', pdfBlob, pdfName);
         formData.append('posX', pos.x);
         formData.append('posY', pos.y);
-        formData.append('pageNumber', pageNumber);
-
+        formData.append('pageNumber', currentPage);
+        console.log(currentPage);
         
         fetch('http://localhost:8080/api/pdf/sign', {
             method: 'POST',
@@ -100,28 +100,56 @@ function base64ToBlob(base64) {
     return new Blob([byteArray], { type: 'application/pdf' });
 }
 
+let currentPage = 1;
+let pdfDoc = null;
+
 function loadPDF(base64PDF) {
-    const canvas = document.getElementById('pdfCanvas');
-    const context = canvas.getContext('2d');
-    
+
     const pdfData = atob(base64PDF);
     const loadingTask = pdfjsLib.getDocument({data: new Uint8Array(pdfData.length).map((_, i) => pdfData.charCodeAt(i))});
 
-    loadingTask.promise.then(function(pdfDoc) {
-        pdfDoc.getPage(1).then(function(page) {
-            const viewport = page.getViewport({ scale: 1.5 });
-            canvas.height = viewport.height;
-            canvas.width = viewport.width;
-
-            const renderContext = {
-                canvasContext: context,
-                viewport: viewport
-            };
-            page.render(renderContext);
-        });
+    loadingTask.promise.then(function (loadedPdfDoc) {
+        pdfDoc = loadedPdfDoc;
+        currentPage = pdfDoc.numPages;
+        renderPage(currentPage);
     });
 }
 
+function renderPage(pageNum){
+    const canvas = document.getElementById('pdfCanvas');
+    const context = canvas.getContext('2d');
+
+    pdfDoc.getPage(pageNum).then(function (page) {
+        const viewport = page.getViewport({ scale: 1.5 });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+        };
+        page.render(renderContext);
+
+        document.getElementById('pageNumberDisplay').textContent = `${pageNum}/${pdfDoc.numPages}`;
+    })
+}
+
+function nextPage() {
+    if (currentPage < pdfDoc.numPages) {
+        currentPage++;
+        renderPage(currentPage);
+    }
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+    }
+}
+
+document.getElementById('prevButton').addEventListener('click', prevPage);
+document.getElementById('nextButton').addEventListener('click', nextPage);
 
 // Carimbo móvel
 let isDragging = false;
