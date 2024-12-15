@@ -12,12 +12,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # Rota para renderizar a página de upload
-@app.get("/sign/upload", response_class=HTMLResponse)
+@app.get("/signature/upload", response_class=HTMLResponse)
 async def render_upload_page(request: Request):
-    return templates.TemplateResponse("upload.html", {"request": request, "pdf_document": None})
+    return templates.TemplateResponse("upload_sign.html", {"request": request, "pdf_document": None})
+
+@app.get("/validation/upload", response_class=HTMLResponse)
+async def render_upload_validation_page(request: Request):
+    return templates.TemplateResponse("upload_validation.html", {"request": request, "pdf_document": None})
 
 # Endpoint para receber o PDF e converter para base64
-@app.post("/sign/upload")
+@app.post("/signature/upload")
 async def upload_pdf(file: UploadFile = File(...)):
     # Lê o conteúdo do arquivo PDF
     pdf_bytes = await file.read()

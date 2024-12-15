@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assinar Documento - UnBSign</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1 id="cabecalho"><strong>UnB - SIGAA </strong> - Sistema Integrado de Gestão de Atividades Acadêmicas
+            <a id="logout-button" style="color: white !important; float: right !important; margin-right: 55px !important;">Sair</a>
+            </h1>
+            <div id="usuario" style="color: black !important; margin-left: 4px;">
+                <strong>User</strong>
+            </div>
+            <div id="modulos">
+                <div class="modulo-item">Ensino</div>
+                <div class="modulo-item">Pesquisa</div>
+                <div class="modulo-item">Extensão</div>
+                <div class="modulo-item">Bolsas</div>
+                <div class="modulo-item">Estágio</div>
+                <div class="modulo-item">Mobilidade</div>
+                <div class="modulo-item">Outros</div>
+            </div>
+            <div id="pagina"><strong>Portal Discente > Validar Assinatura</strong></div>
+        </header>
+        
+        <div class="form-container">
+            <div class="form-header">
+                Validar Assinatura de Documento
+            </div>
+            <form class="form-body" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="input-group">
+                    <label for="file-upload">Escolha um arquivo PDF para validar assinatura:</label>
+                    <input type="file" name="file" id="file-upload" class="file-input" accept="application/pdf" required>
+                </div>
+                <div id="fileNameDisplay" class="file-name-display" style="margin-left: 20px;"></div>
+                <div class="form-button">
+                    <button type="submit">Validar</button>
+                    <button type="button" onclick="window.location.reload();">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            SIGAA | Secretaria de Tecnologia da Informação - STI - (61) 3107-0102
+        </footer>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('file-upload');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+        fileInput.addEventListener('change', (event) => {
+            const fileName = event.target.files[0]?.name || '';
+            fileNameDisplay.textContent = fileName ? `Arquivo selecionado: ${fileName}` : '';
+        });
+
+        // Adiciona um ouvinte de evento ao botão de envio para verificar o nome do arquivo novamente
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Previne o envio padrão do formulário
+
+            const formData = new FormData(document.getElementById('uploadForm'));
+
+            try {
+                const response = await fetch('http://localhost:8080/api/pdf/validation', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    if (result.success) {
+                        fileNameDisplay.textContent = `A assinatura no documento é válida`;
+                    } else {
+                        fileNameDisplay.textContent = `A assinatura no documento não é válida`;
+                        fileNameDisplay.style.color = 'red';
+                    }
+                } else {
+                    alert(result.error || 'Ocorreu um erro ao validar o PDF.');
+                    console.log(result.error);
+                }
+            } catch (error) {
+                fileNameDisplay.textContent = `Erro: ${error.message}`;
+                console.log(error)
+            }
+        });
+    </script>
+</body>
+</html>

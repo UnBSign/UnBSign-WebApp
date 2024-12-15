@@ -7,7 +7,7 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('/sign/upload', {
+        fetch('/signature/upload', {
             method: 'POST',
             body: formData
         })
@@ -51,7 +51,7 @@ document.getElementById('signButton').addEventListener('click', function() {
         formData.append('pageNumber', currentPage);
         console.log(currentPage);
         
-        fetch('http://localhost:8080/api/pdf/sign', {
+        fetch('http://localhost:8080/api/pdf/signature', {
             method: 'POST',
             body: formData,
         })
@@ -71,9 +71,9 @@ document.getElementById('signButton').addEventListener('click', function() {
                 const url = URL.createObjectURL(blob);
                 const win = window.open(url, '_blank'); 
                 win.document.title = signedFileName
-                win.onload = () => {
-                  URL.revokeObjectURL(url);
-                };
+                // win.onload = () => {
+                //   URL.revokeObjectURL(url);
+                // };
               });
         })
         .catch(error => {
