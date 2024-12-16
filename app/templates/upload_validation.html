@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assinar Documento - UnBSign</title>
+    <title>Validar Assinatura - UnBSign</title>
     <link rel="stylesheet" href="../static/css/style.css">
 </head>
 <body>
@@ -36,7 +36,8 @@
                     <label for="file-upload">Escolha um arquivo PDF para validar assinatura:</label>
                     <input type="file" name="file" id="file-upload" class="file-input" accept="application/pdf" required>
                 </div>
-                <div id="fileNameDisplay" class="file-name-display" style="margin-left: 20px;"></div>
+                <div id="fileNameDisplay" class="file-name-display" style="margin-left: 20px;margin-bottom: 20px;"></div>
+                <div id="fileValidationDisplay" style="margin-left: 20px; margin-bottom: 20px"></div>
                 <div class="form-button">
                     <button type="submit">Validar</button>
                     <button type="button" onclick="window.location.reload();">Cancelar</button>
@@ -52,15 +53,16 @@
     <script>
         const fileInput = document.getElementById('file-upload');
         const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const fileValidationDisplay = document.getElementById("fileValidationDisplay");
 
         fileInput.addEventListener('change', (event) => {
             const fileName = event.target.files[0]?.name || '';
             fileNameDisplay.textContent = fileName ? `Arquivo selecionado: ${fileName}` : '';
+            fileNameDisplay.style.color = 'black';
         });
 
-        // Adiciona um ouvinte de evento ao botão de envio para verificar o nome do arquivo novamente
         document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Previne o envio padrão do formulário
+            event.preventDefault();
 
             const formData = new FormData(document.getElementById('uploadForm'));
 
@@ -73,10 +75,13 @@
                 const result = await response.json();
                 if (response.ok) {
                     if (result.success) {
-                        fileNameDisplay.textContent = `A assinatura no documento é válida`;
+                        fileValidationDisplay.style.display = 'flex';
+                        fileValidationDisplay.textContent = `A assinatura no documento é válida`;
+                        fileValidationDisplay.style.color = 'black'
                     } else {
-                        fileNameDisplay.textContent = `A assinatura no documento não é válida`;
-                        fileNameDisplay.style.color = 'red';
+                        fileValidationDisplay.style.display = 'flex';
+                        fileValidationDisplay.textContent = `A assinatura no documento não é válida`;
+                        fileValidationDisplay.style.color = 'red';
                     }
                 } else {
                     alert(result.error || 'Ocorreu um erro ao validar o PDF.');
