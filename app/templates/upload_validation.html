@@ -11,9 +11,6 @@
         <header>
             <h1 id="cabecalho"><strong>UnB - SIGAA </strong> - Sistema Integrado de Gestão de Atividades Acadêmicas
             </h1>
-            <div id="usuario" style="color: black !important; margin-left: 4px;">
-                <strong>User</strong>
-            </div>
             <div id="modulos">
                 <div class="modulo-item">Ensino</div>
                 <div class="modulo-item">Pesquisa</div>
@@ -36,7 +33,8 @@
                     <input type="file" name="file" id="file-upload" class="file-input" accept="application/pdf" required>
                 </div>
                 <div id="fileNameDisplay" class="file-name-display" style="margin-left: 20px;margin-bottom: 20px;"></div>
-                <div id="fileValidationDisplay" style="margin-left: 20px; margin-bottom: 20px"></div>
+                <div id="fileValidationDisplay" style="margin-left: 20px; margin-bottom: 50px; font-weight: bold;"></div>
+                <div id="signatureDetails" style="margin-left: 20px; margin-top: 10px;"></div>
                 <div class="form-button">
                     <button type="submit">Validar</button>
                     <button type="button" onclick="window.location.reload();">Cancelar</button>
@@ -48,49 +46,7 @@
             SIGAA | Secretaria de Tecnologia da Informação - STI - (61) 3107-0102
         </footer>
     </div>
-
-    <script>
-        const fileInput = document.getElementById('file-upload');
-        const fileNameDisplay = document.getElementById('fileNameDisplay');
-        const fileValidationDisplay = document.getElementById("fileValidationDisplay");
-
-        fileInput.addEventListener('change', (event) => {
-            const fileName = event.target.files[0]?.name || '';
-            fileNameDisplay.textContent = fileName ? `Arquivo selecionado: ${fileName}` : '';
-            fileNameDisplay.style.color = 'black';
-        });
-
-        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(document.getElementById('uploadForm'));
-
-            try {
-                const response = await fetch('http://localhost:8080/api/pdf/validation', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    if (result.success) {
-                        fileValidationDisplay.style.display = 'flex';
-                        fileValidationDisplay.textContent = `A assinatura no documento é válida`;
-                        fileValidationDisplay.style.color = 'black'
-                    } else {
-                        fileValidationDisplay.style.display = 'flex';
-                        fileValidationDisplay.textContent = `A assinatura no documento não é válida`;
-                        fileValidationDisplay.style.color = 'red';
-                    }
-                } else {
-                    alert(result.error || 'Ocorreu um erro ao validar o PDF.');
-                    console.log(result.error);
-                }
-            } catch (error) {
-                fileNameDisplay.textContent = `Erro: ${error.message}`;
-                console.log(error)
-            }
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="../static/js/validacao.js"></script>  
 </body>
 </html>

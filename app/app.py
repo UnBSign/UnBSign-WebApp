@@ -8,23 +8,19 @@ from controller.user_controller import UserController
 from inputs.user_input import UserInput
 from controller.login_controller import LoginController
 
-def verify_jwt(request: Request):
-    token = request.cookies.get("authToken")
-    if not token:
-        raise HTTPException(status_code=401, detail="Not authenticated")
-    
-    full_name = LoginController.validate_user_authToken(token)
-    
-    return full_name
-
 app = FastAPI() 
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/signature/upload", response_class=HTMLResponse)
-async def render_upload_page(request: Request, user_full_name: str = Depends(verify_jwt)):
-    return templates.TemplateResponse("upload_sign.html", {"request": request, "pdf_document": None, "full_name": user_full_name})
+async def render_upload_page(request: Request):
+    token = request.cookies.get("authToken")
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    full_name = LoginController.validate_user_authToken(token)
+    return templates.TemplateResponse("upload_sign.html", {"request": request, "pdf_document": None, "full_name": full_name})
 
 @app.get("/validation/upload", response_class=HTMLResponse)
 async def render_upload_validation_page(request: Request):

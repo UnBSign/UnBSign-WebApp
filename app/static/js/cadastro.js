@@ -14,11 +14,8 @@ document.querySelector('form').addEventListener('submit', async function(e) {
             },
             body: JSON.stringify(json)
         });
-
-        const result = await response.json();
         
-        if (response.status === 201) {
-            alert('Usuário cadastrado com sucesso!');
+        if (response.ok) {
             window.location.href = '/login';
         } else if (response.status === 422 || response.status !== 201) {
             alert('Erro ao cadastrar usuário');
