@@ -18,6 +18,7 @@ class LoginController():
             
             if user and user.verify_password(password):
                 payload = {
+                    "issuer": "webapp_test",
                     "user_id": str(user.id),
                     "username": user.username,
                     "exp": datetime.utcnow() + timedelta(hours=ACCESS_TOKEN_HOURS)

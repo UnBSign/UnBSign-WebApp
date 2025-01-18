@@ -17,18 +17,16 @@ class UserModel(Base):
     password: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False)
 
-    def create_user(
-        id=str(uuid4()),
+    def create(
         full_name : str | None = None,
         username : str | None = None,
         dob : datetime.datetime | None = None,
-        password : str | None = None,
-        is_active: str | None = None
+        password : str | None = None
     ) -> "UserModel":
         session = next(get_db())
         try:
             new_user = UserModel(
-                id=id,
+                id=str(uuid4()),
                 full_name=full_name,
                 username=username,
                 dob=dob,
@@ -38,11 +36,51 @@ class UserModel(Base):
             session.add(new_user)
             session.commit()
             
+            session.refresh(new_user)
+            
             return new_user
             
         except Exception as e:
             session.rollback()
             raise e
+        finally:
+            session.close()
+    
+    def delete(user_id: str) -> None:
+        session = next(get_db())
+        try:
+            user_to_delete = session.query(UserModel).filter(UserModel.id == user_id).first()
+            if user_to_delete:
+                session.delete(user_to_delete)
+                session.commit()
+                return f"User with ID {user_id} deleted successfully"
+            else:
+                return f"User with ID {user_id} not found."
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+    
+    def find_user(user_id: str | None = None, username: str | None = None):
+        session = next(get_db())
+        try:
+            if user_id:
+                user = session.query(UserModel).filter(UserModel.id == user_id).first()
+            elif username:
+                user = session.query(UserModel).filter(UserModel.username == username).first()
+            else:
+                return None
+
+            return user
+
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
     
     def verify_password(self, plain_password: str):
         return bcrypt.checkpw(plain_password.encode(), self.password.encode())
+    
+    
