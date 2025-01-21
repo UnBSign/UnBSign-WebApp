@@ -2,3 +2,10 @@ fastapi==0.115.6
 uvicorn==0.32.*
 python-multipart==0.0.*
 jinja2
+SQLAlchemy==2.0.*
+bcrypt==4.2.*
+pyjwt==2.10.*
+alembic==1.14.*
+psycopg2-binary==2.9.*
+python-dotenv==1.0.*
+requests==2.32.*

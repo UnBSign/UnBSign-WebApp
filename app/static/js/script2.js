@@ -7,14 +7,13 @@ document.getElementById('uploadForm').addEventListener('submit', function (e) {
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('/sign/upload', {
+        fetch('/signature/upload', {
             method: 'POST',
             body: formData
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                //alert('Arquivo carregado com sucesso!');
                 document.getElementById('pdfContainer').style.display = 'block';
                 document.getElementById('pdfNavigation').style.display = 'flex';
                 
@@ -40,6 +39,22 @@ document.getElementById('signButton').addEventListener('click', function() {
     const pdfName = sessionStorage.getItem("pdfName");
     const pos = getStampPosition();
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        console.log(parts)
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null; // Se o cookie não for encontrado
+    }
+    
+    const authToken = getCookie('authToken');
+
     if (base64PDF && pos) {
         const pdfBlob = base64ToBlob(base64PDF);
         
@@ -49,14 +64,17 @@ document.getElementById('signButton').addEventListener('click', function() {
         formData.append('posX', pos.x);
         formData.append('posY', pos.y);
         formData.append('pageNumber', currentPage);
-        console.log(currentPage);
         
-        fetch('http://localhost:8080/api/pdf/sign', {
+        fetch('http://localhost:8080/api/pdf/signature', {
             method: 'POST',
             body: formData,
+            headers: {
+                'Authorization': `Bearer ${authToken}`
+            },
         })
         .then(response => {
             if (!response.ok) {
+                console.log(response)
                 throw new Error('Erro ao assinar o arquivo');
             }
             console.log(response.headers)
@@ -71,9 +89,9 @@ document.getElementById('signButton').addEventListener('click', function() {
                 const url = URL.createObjectURL(blob);
                 const win = window.open(url, '_blank'); 
                 win.document.title = signedFileName
-                win.onload = () => {
-                  URL.revokeObjectURL(url);
-                };
+                // win.onload = () => {
+                //   URL.revokeObjectURL(url);
+                // };
               });
         })
         .catch(error => {

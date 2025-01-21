@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validar Assinatura - UnBSign</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1 id="cabecalho"><strong>UnB - SIGAA </strong> - Sistema Integrado de Gestão de Atividades Acadêmicas
+            </h1>
+            <div id="modulos">
+                <div class="modulo-item">Ensino</div>
+                <div class="modulo-item">Pesquisa</div>
+                <div class="modulo-item">Extensão</div>
+                <div class="modulo-item">Bolsas</div>
+                <div class="modulo-item">Estágio</div>
+                <div class="modulo-item">Mobilidade</div>
+                <div class="modulo-item">Outros</div>
+            </div>
+            <div id="pagina"><strong>Portal Discente > Validar Assinatura</strong></div>
+        </header>
+        
+        <div class="form-container">
+            <div class="form-header">
+                Validar Assinatura de Documento
+            </div>
+            <form class="form-body" method="post" enctype="multipart/form-data" id="uploadForm">
+                <div class="input-group">
+                    <label for="file-upload">Escolha um arquivo PDF para validar assinatura:</label>
+                    <input type="file" name="file" id="file-upload" class="file-input" accept="application/pdf" required>
+                </div>
+                <div id="fileNameDisplay" class="file-name-display" style="margin-left: 20px;margin-bottom: 20px;"></div>
+                <div id="fileValidationDisplay" style="margin-left: 20px; margin-bottom: 50px; font-weight: bold;"></div>
+                <div id="signatureDetails" style="margin-left: 20px; margin-top: 10px;"></div>
+                <div class="form-button">
+                    <button type="submit">Validar</button>
+                    <button type="button" onclick="window.location.reload();">Cancelar</button>
+                </div>
+            </form>
+        </div>
+
+        <footer>
+            SIGAA | Secretaria de Tecnologia da Informação - STI - (61) 3107-0102
+        </footer>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="../static/js/validacao.js"></script>  
+</body>
+</html>
