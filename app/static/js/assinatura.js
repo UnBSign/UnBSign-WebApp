@@ -77,12 +77,8 @@ document.getElementById('signButton').addEventListener('click', function() {
                 console.log(response)
                 throw new Error('Erro ao assinar o arquivo');
             }
-            console.log(response.headers)
             
             const signedFileName = setSignedFileName(pdfName);
-            console.log(signedFileName);
-            
-            
 
             // Criar o Blob do PDF assinado
             return response.blob().then(blob => {
