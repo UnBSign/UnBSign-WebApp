@@ -1,6 +1,7 @@
-from models.user_model import UserModel
+from app.models.user_model import UserModel
 import bcrypt
 import requests
+from app.controller.login_controller import LoginController
 
 class UserController:
     def __init__(self, user: UserModel):
@@ -20,10 +21,16 @@ class UserController:
                 password = self.user.password
             )
             
+            token = LoginController().generate_user_token(new_user.id, new_user.full_name)
+            
+            headers = {
+                "Authorization": f"Bearer {token}"
+            }
+
             response = requests.post(
                 "http://host.docker.internal:8080/api/certificates/issue-certificate",
-                json={"id": new_user.id,
-                      "cn": new_user.full_name}
+                json={"id": new_user.id, "cn": new_user.full_name},
+                headers=headers
             )
             
             if response.status_code != 200:

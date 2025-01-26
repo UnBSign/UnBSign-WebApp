@@ -3,15 +3,16 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
+from pathlib import Path
 import base64
-from controller.user_controller import UserController
-from inputs.user_input import UserInput
-from controller.login_controller import LoginController
+from app.controller.user_controller import UserController
+from app.inputs.user_input import UserInput
+from app.controller.login_controller import LoginController
 
 app = FastAPI() 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
+templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
 
 @app.get("/signature/upload", response_class=HTMLResponse)
 async def render_upload_page(request: Request):

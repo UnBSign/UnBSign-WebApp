@@ -1,8 +1,8 @@
 import jwt
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from database.database import SessionLocal
-from models.user_model import UserModel
+from app.database.database import SessionLocal
+from app.models.user_model import UserModel
 from fastapi import HTTPException, status
 from jwt import PyJWTError
 
@@ -17,14 +17,7 @@ class LoginController():
             user = db.query(UserModel).filter(UserModel.username == username).first()
             
             if user and user.verify_password(password):
-                payload = {
-                    "issuer": "webapp_test",
-                    "user_id": str(user.id),
-                    "username": user.username,
-                    "exp": datetime.utcnow() + timedelta(hours=ACCESS_TOKEN_HOURS)
-                }
-                
-                token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+                token = self.generate_user_token(id=str(user.id), username=user.username)
                 
                 user.is_active = True
                 db.commit()
@@ -39,7 +32,16 @@ class LoginController():
             )
         finally:
             db.close()
-            
+    def generate_user_token(self, id: str, username: str):
+        payload = {
+                    "issuer": "webapp_test",
+                    "user_id": id,
+                    "username": username,
+                    "exp": datetime.utcnow() + timedelta(hours=ACCESS_TOKEN_HOURS)
+                }
+                
+        return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)        
+    
     def validate_user_authToken(token: str):
         db: Session = SessionLocal()
         try:

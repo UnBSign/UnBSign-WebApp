@@ -3,7 +3,7 @@ from sqlalchemy import String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 
 from sqlalchemy.orm import Mapped, mapped_column
-from database.database import get_db, Base
+from app.database.database import get_db, Base
 import datetime
 import bcrypt
 
