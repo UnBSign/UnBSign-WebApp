@@ -87,11 +87,15 @@ document.getElementById('signButton').addEventListener('click', function() {
             // Criar o Blob do PDF assinado
             return response.blob().then(blob => {
                 const url = URL.createObjectURL(blob);
-                const win = window.open(url, '_blank'); 
-                win.document.title = signedFileName
-                // win.onload = () => {
-                //   URL.revokeObjectURL(url);
-                // };
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = signedFileName; 
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
               });
         })
         .catch(error => {
