@@ -6,7 +6,6 @@ document.getElementById("login-form").addEventListener("submit", async function 
     const password = formData.get("password");
 
     try {
-        // Envia a solicitação de login
         const response = await fetch('/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },

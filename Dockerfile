@@ -14,5 +14,7 @@ RUN python -m venv /venv && \
    chmod -R +x /scripts
 
 ENV PATH="/scripts:/venv/bin:$PATH"
+ENV PYTHONPATH=/app
+
 
 CMD ["commands.sh"]
