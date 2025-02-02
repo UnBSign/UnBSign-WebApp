@@ -66,7 +66,7 @@ async def login_user(username: str = Form(...), password: str = Form(...)):
     token = LoginController().authenticate_user(username, password)
     if token:
         response = JSONResponse(content={"message": "Login successful"}, status_code=200)
-        response.set_cookie(key="authToken", value=token, httponly=False, secure=True, samesite="Strict")
+        response.set_cookie(key="authToken", value=token, httponly=False, secure=False, samesite="Strict")
         return response
     else:
         raise HTTPException(status_code=401, detail="Invalid credentials")
