@@ -14,9 +14,10 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
     event.preventDefault();
 
     const formData = new FormData(document.getElementById('uploadForm'));
+    const API_URL = window.API_URL;
 
     try {
-        const response = await fetch('http://localhost:8080/api/pdf/validation', {
+        const response = await fetch(API_URL + '/pdf/validation', {
             method: 'POST',
             body: formData
         });
@@ -44,7 +45,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (event) =
                                                                         text-align: center; 
                                                                         line-height: 10px;
                                                                         font-size: 10px;"
-                                                                        title="O certificado em uma ou mais assinaturas não é reconhecido pela PKI unbsub-ca">
+                                                                        title="O certificado tem uma ou mais assinaturas que não é reconhecido pela PKI unbsub-ca">
                                                                  ?
                                                             </span> 
                                                             <hr>`;

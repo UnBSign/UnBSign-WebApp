@@ -8,8 +8,11 @@ import base64
 from app.controller.user_controller import UserController
 from app.inputs.user_input import UserInput
 from app.controller.login_controller import LoginController
+from config import config
 
-app = FastAPI() 
+app = FastAPI()
+
+API_URL = config.api_url
 
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
 templates = Jinja2Templates(directory=Path(__file__).parent / "templates")
@@ -21,15 +24,15 @@ async def render_upload_page(request: Request):
         raise HTTPException(status_code=401, detail="Not authenticated")
     
     full_name = LoginController.validate_user_authToken(token)
-    return templates.TemplateResponse("upload_sign.html", {"request": request, "pdf_document": None, "full_name": full_name})
+    return templates.TemplateResponse("upload_sign.html", {"request": request, "pdf_document": None, "full_name": full_name, "api_url": API_URL})
 
 @app.get("/validation/upload", response_class=HTMLResponse)
 async def render_upload_validation_page(request: Request):
-    return templates.TemplateResponse("upload_validation.html", {"request": request, "pdf_document": None})
+    return templates.TemplateResponse("upload_validation.html", {"request": request, "pdf_document": None, "api_url": API_URL})
 
 @app.get("/cadastro", response_class=HTMLResponse)
 async def render_cadastro_page(request: Request):
-    return templates.TemplateResponse("cadastro.html", {"request": request})
+    return templates.TemplateResponse("cadastro.html", {"request": request, "api_url": API_URL})
 
 @app.get("/login", response_class=HTMLResponse)
 async def render_login_page(request: Request):

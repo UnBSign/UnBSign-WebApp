@@ -38,6 +38,7 @@ document.getElementById('signButton').addEventListener('click', function() {
     const base64PDF = sessionStorage.getItem('pdfFile');
     const pdfName = sessionStorage.getItem("pdfName");
     const pos = getStampPosition();
+    const API_URL = window.API_URL;
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -64,8 +65,8 @@ document.getElementById('signButton').addEventListener('click', function() {
         formData.append('posX', pos.x);
         formData.append('posY', pos.y);
         formData.append('pageNumber', currentPage);
-        
-        fetch('http://localhost:8080/api/pdf/signature', {
+        console.log(API_URL + '/pdf/signature')
+        fetch(API_URL + '/pdf/signature', {
             method: 'POST',
             body: formData,
             headers: {

@@ -2,6 +2,7 @@ from app.models.user_model import UserModel
 import bcrypt
 import requests
 from app.controller.login_controller import LoginController
+from config import config
 
 class UserController:
     def __init__(self, user: UserModel):
@@ -28,7 +29,7 @@ class UserController:
             }
 
             response = requests.post(
-                "http://host.docker.internal:8080/api/certificates/issue-certificate",
+                config.api_url + "/certificates/issue-certificate",
                 json={"id": new_user.id, "cn": new_user.full_name},
                 headers=headers
             )
