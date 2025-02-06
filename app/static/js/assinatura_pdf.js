@@ -135,6 +135,8 @@ function loadPDF(base64PDF) {
         pdfDoc = loadedPdfDoc;
         currentPage = pdfDoc.numPages;
         renderPage(currentPage);
+
+        initializeStampPosition();
     });
 }
 
@@ -173,6 +175,19 @@ function prevPage() {
 
 document.getElementById('prevButton').addEventListener('click', prevPage);
 document.getElementById('nextButton').addEventListener('click', nextPage);
+
+function initializeStampPosition() {
+    const canvasRect = document.getElementById('pdfCanvas').getBoundingClientRect();
+    const stamp = document.getElementById('stamp');
+
+    // Calcula a posição inicial do carimbo para a borda inferior
+    const initialX = (canvasRect.width - stamp.offsetWidth) / 2;  // Centraliza horizontalmente
+    const initialY = canvasRect.height - stamp.offsetHeight; // Coloca na borda inferior
+
+    // Ajusta a posição inicial do carimbo
+    stamp.style.left = `${initialX}px`;
+    stamp.style.top = `${initialY}px`;
+}
 
 // Carimbo móvel
 let isDragging = false;

@@ -29,7 +29,7 @@ class UserController:
             }
 
             response = requests.post(
-                config.api_url + "/certificates/issue-certificate",
+                config.api_url_back + "/certificates/issue-certificate",
                 json={"id": new_user.id, "cn": new_user.full_name},
                 headers=headers
             )
